@@ -16,4 +16,4 @@ yarn start --reset-cache
 
 
 ## 📝 Notes
-Since `expo-image-picker` has a [bug](https://github.com/react-native-image-picker/react-native-image-picker/issues/1541) in iOS simulator, I strongly recommend you to use a real device.
+Since `expo-image-picker` has a [bug](https://github.com/expo/expo/issues/11291) in iOS simulator, I strongly recommend you to use a real device.
