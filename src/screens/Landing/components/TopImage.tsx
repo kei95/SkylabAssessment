@@ -4,6 +4,7 @@ import { Image, ImageStyle, StyleSheet, ViewStyle } from "react-native";
 
 // UI
 import { Container } from "native-base";
+import globalStyles from "../../../components/globalStyles";
 
 export const TopImage: React.FC = () => {
   return (
@@ -19,18 +20,11 @@ export const TopImage: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
+    ...globalStyles.shadow,
     width: "100%",
     maxHeight: 350,
     borderRadius: 10,
     marginTop: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 1,
   } as ViewStyle,
   image: {
     width: "100%",
