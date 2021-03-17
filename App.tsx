@@ -1,19 +1,39 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// react/react-native
+import React, { useEffect } from "react";
+import { Platform } from "react-native";
 
-export default function App() {
+// expo
+import * as ImagePicker from "expo-image-picker";
+
+// UI
+import { Body, StyleProvider } from "native-base";
+import getTheme from "./native-base-theme/components";
+
+// components
+import { RouterIndex } from "./src/navigation";
+import platform from "./native-base-theme/variables/platform";
+
+export default function App(): JSX.Element {
+  useEffect(() => {
+    let isMounted: boolean = true;
+    if (isMounted) {
+      // Get library permission
+      (async (): Promise<void> => {
+        if (Platform.OS !== "web") {
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        }
+      })();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <StyleProvider style={getTheme(platform)}>
+      <Body>
+        <RouterIndex />
+      </Body>
+    </StyleProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
