@@ -1,53 +1,49 @@
 // react/react-native
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, ViewStyle } from "react-native";
 
 // expo
 import { Camera } from "expo-camera";
 
 // UI
-import { Container, View, Text, Icon } from "native-base";
+import { Container } from "native-base";
 
 // router
-import { useHistory } from "react-router-dom";
+import { Footer } from "./components/Footer/Footer";
+import { CloseButton } from "./components/CloseButton";
+import { CameraPreview } from "./CameraPreview";
 
-export const CameraScreen: React.FC = ({}) => {
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const history = useHistory();
-
-  const onPressCloseButton = (): void => {
-    history.goBack();
-  };
+export const CameraScreen: React.FC = () => {
+  const [type, setType] = useState<string | number>(Camera.Constants.Type.back);
+  const [capturedImage, setCapturedImage] = useState<string | undefined>(
+    undefined
+  );
+  const cameraRef = useRef<Camera | undefined>(undefined);
 
   return (
     <Container>
-      <Camera style={styles.camera} type={type}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={onPressCloseButton}
+      {capturedImage ? (
+        <CameraPreview
+          capturedImage={capturedImage}
+          setCapturedImage={setCapturedImage}
+        />
+      ) : (
+        <Camera
+          style={styles.camera}
+          ref={(ref: Camera) => {
+            cameraRef.current = ref;
+          }}
+          type={type}
         >
-          <Icon name="close" style={styles.closeIcon} />
-        </TouchableOpacity>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}
-          >
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+          <CloseButton />
+          <Footer
+            setCapturedImage={setCapturedImage}
+            onPressFlip={setType}
+            type={type}
+            cameraRef={cameraRef}
+          />
+        </Camera>
+      )}
     </Container>
   );
 };
@@ -56,29 +52,4 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   } as ViewStyle,
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    margin: 20,
-  } as ViewStyle,
-  button: {
-    flex: 0.1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  } as ViewStyle,
-  text: {
-    fontSize: 18,
-    color: "white",
-  } as TextStyle,
-  closeButton: {
-    flex: 0.1,
-    alignItems: "center",
-    alignSelf: "flex-start",
-    margin: 10,
-  } as ViewStyle,
-  closeIcon: {
-    fontSize: 40,
-    color: "#fff",
-  } as TextStyle,
 });
